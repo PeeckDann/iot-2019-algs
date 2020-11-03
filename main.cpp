@@ -8,11 +8,22 @@ int solve(int cNum, int cWidth, int cHeight){
     int bigger = (cWidth > cHeight) ? cWidth : cHeight;
     int smaller = cWidth + cHeight - bigger;
 
+    int exceptionSideSize = bigger * cNum;
+    int oldTemp = exceptionSideSize;
+    int temp = 0;
+
     if (cNum == 1){
         return bigger;
     }
     if (cWidth == cHeight){
         return ceil(sqrt(cNum)) * cWidth;
+    }
+    for (int i = 1; i < ceil(cNum/2); ++i){
+        if (cNum % i == 0){
+            temp = (smaller * (cNum / i) > bigger * i) ? smaller * (cNum / i) : bigger * i;
+            exceptionSideSize = (temp < oldTemp) ? temp : oldTemp;
+            oldTemp = temp;
+        }
     }
 
     int maxSideSize = 0;
@@ -29,14 +40,14 @@ int solve(int cNum, int cWidth, int cHeight){
         if (finalSideSize > maxSideSize){
             finalSideSize = maxSideSize;
         }
-        
+
         if (colNum == cNum){
             rowNum++;
             finalSideSize = maxSideSize;
         }
     }
 
-    return finalSideSize;
+    return (finalSideSize < exceptionSideSize) ? finalSideSize : exceptionSideSize;
 }
 
 int main(){
